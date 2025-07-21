@@ -60,7 +60,7 @@ if ( ! class_exists( 'WPFRONTBLOGGER_FRONTEND' ) ) {
 			), $atts );
 
 			ob_start();
-			wpfrontblogger()->get_template( 'blog-form.php', array( 'atts' => $atts ) );
+			wpfrontblogger()->get_template( 'admin-blog-form.php', array( 'atts' => $atts ) );
 			return ob_get_clean();
 		}
 	}

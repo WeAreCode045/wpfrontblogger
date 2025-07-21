@@ -746,7 +746,8 @@ jQuery(document).ready(function($) {
                 if (response.success) {
                     displayTitleSuggestions(response.data.titles);
                 } else {
-                    showNotice(response.data.message || 'Failed to generate titles', 'error');
+                    const errorMessage = (response.data && response.data.message) ? response.data.message : 'Failed to generate titles';
+                    showNotice(errorMessage, 'error');
                 }
             },
             error: function() {
@@ -799,9 +800,10 @@ jQuery(document).ready(function($) {
             success: function(response) {
                 if (response.success) {
                     setEditorContent(response.data.content);
-                    showNotice('Content has been rewritten by AI!', 'success');
+                    // Success notice removed - content is rewritten silently
                 } else {
-                    showNotice(response.data.message || 'Failed to rewrite content', 'error');
+                    const errorMessage = (response.data && response.data.message) ? response.data.message : 'Failed to rewrite content';
+                    showNotice(errorMessage, 'error');
                 }
             },
             error: function() {
@@ -847,7 +849,8 @@ jQuery(document).ready(function($) {
                     
                     showNotice('AI selected ' + response.data.categories.length + ' relevant categories!', 'success');
                 } else {
-                    showNotice(response.data.message || 'Failed to select categories', 'error');
+                    const errorMessage = (response.data && response.data.message) ? response.data.message : 'Failed to select categories';
+                    showNotice(errorMessage, 'error');
                 }
             },
             error: function() {
@@ -891,7 +894,8 @@ jQuery(document).ready(function($) {
                     
                     showNotice('AI generated ' + response.data.tags.length + ' relevant tags!', 'success');
                 } else {
-                    showNotice(response.data.message || 'Failed to generate tags', 'error');
+                    const errorMessage = (response.data && response.data.message) ? response.data.message : 'Failed to generate tags';
+                    showNotice(errorMessage, 'error');
                 }
             },
             error: function() {
@@ -935,7 +939,8 @@ jQuery(document).ready(function($) {
                     
                     showNotice('AI selected ' + response.data.products.length + ' relevant products!', 'success');
                 } else {
-                    showNotice(response.data.message || 'Failed to select products', 'error');
+                    const errorMessage = (response.data && response.data.message) ? response.data.message : 'Failed to select products';
+                    showNotice(errorMessage, 'error');
                 }
             },
             error: function() {
@@ -974,7 +979,8 @@ jQuery(document).ready(function($) {
                 if (response.success) {
                     displayAIImageResult(response.data);
                 } else {
-                    showNotice(response.data.message || 'Failed to find image', 'error');
+                    const errorMessage = (response.data && response.data.message) ? response.data.message : 'Failed to find image';
+                    showNotice(errorMessage, 'error');
                     $('#ai-find-image').show();
                 }
             },
