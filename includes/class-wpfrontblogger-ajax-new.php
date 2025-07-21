@@ -121,7 +121,7 @@ if ( ! class_exists( 'WPFRONTBLOGGER_AJAX' ) ) {
 				wp_send_json_error( array( 'message' => __( 'Content is required for category selection', 'wpfrontblogger' ) ) );
 			}
 
-			$result = wpfrontblogger_ai()->select_categories( $content );
+			$result = wpfrontblogger_ai()->select_categories( $content ) ?? array();
 
 			if ( is_wp_error( $result ) ) {
 				wp_send_json_error( array( 'message' => $result->get_error_message() ) );
@@ -240,6 +240,21 @@ if ( ! class_exists( 'WPFRONTBLOGGER_AJAX' ) ) {
 					'search_query' => $search_query
 				) );
 			}
+		}
+
+		/**
+		 * Helper: Get images from Envato Elements.
+		 *
+		 * @param string $query Search query.
+		 * @param int $page Page number.
+		 * @param int $per_page Images per page.
+		 * @return array|false Array of images or false on failure.
+		 */
+		private function get_envato_elements_images( $query, $page = 1, $per_page = 12 ) {
+			if ( function_exists( 'envato_elements_get_images' ) ) {
+				return envato_elements_get_images( $query, $page, $per_page );
+			}
+			return false;
 		}
 
 		// [Note: This is a placeholder for the complete AJAX file]

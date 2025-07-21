@@ -281,7 +281,7 @@ if ( ! class_exists( 'WPFRONTBLOGGER_AI' ) ) {
 					
 					if ( ! $product_exists ) {
 						// Get product price
-						$product_obj = wc_get_product( $product->ID );
+						$product_obj = function_exists( 'wc_get_product' ) ? wc_get_product( $product->ID ) : null;
 						$price = '';
 						if ( $product_obj ) {
 							$price = $product_obj->get_price_html();

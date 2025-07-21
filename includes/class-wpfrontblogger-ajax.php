@@ -206,7 +206,7 @@ if ( ! class_exists( 'WPFRONTBLOGGER_AJAX' ) ) {
 				wp_send_json_error( array( 'message' => $keywords->get_error_message() ) );
 			}
 
-			if ( empty( $keywords ) ) {
+			if ( empty( $keywords ) || ! is_array( $keywords ) ) {
 				wp_send_json_error( array( 'message' => __( 'No suitable keywords generated for image search', 'wpfrontblogger' ) ) );
 			}
 
@@ -271,6 +271,21 @@ if ( ! class_exists( 'WPFRONTBLOGGER_AJAX' ) ) {
 			}
 
 			wp_send_json_success( array( 'products' => $result ) );
+		}
+
+		/**
+		 * Helper: Get images from Envato Elements.
+		 *
+		 * @param string $query Search query.
+		 * @param int $page Page number.
+		 * @param int $per_page Images per page.
+		 * @return array|false Array of images or false on failure.
+		 */
+		private function get_envato_elements_images( $query, $page = 1, $per_page = 12 ) {
+			if ( function_exists( 'envato_elements_get_images' ) ) {
+				return envato_elements_get_images( $query, $page, $per_page );
+			}
+			return false;
 		}
 
 		// [Note: This is a placeholder for the complete AJAX file]

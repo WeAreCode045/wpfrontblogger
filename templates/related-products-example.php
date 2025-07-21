@@ -24,7 +24,11 @@ function wpfrontblogger_display_related_products() {
     echo '<div class="products-grid">';
 
     foreach ( $related_products as $product_id ) {
-        $product = wc_get_product( $product_id );
+        if ( function_exists( 'wc_get_product' ) ) {
+            $product = wc_get_product( $product_id );
+        } else {
+            continue;
+        }
         if ( ! $product ) {
             continue;
         }
