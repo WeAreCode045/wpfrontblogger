@@ -30,10 +30,22 @@ jQuery(document).ready(function($) {
         if (typeof tinymce !== 'undefined') {
             $(document).on('tinymce-editor-init', function(event, editor) {
                 if (editor.id === 'post_content') {
-                    // Editor is ready
+                    // Editor is ready - remove aria-hidden from textarea for accessibility
+                    $('#post_content').removeAttr('aria-hidden');
+                    
+                    // Handle focus management properly
+                    editor.on('focus', function() {
+                        $('#post_content_error').removeClass('show');
+                    });
                 }
             });
         }
+        
+        // Fallback for textarea if TinyMCE doesn't load
+        $('#post_content').on('focus', function() {
+            $(this).removeAttr('aria-hidden');
+            $('#post_content_error').removeClass('show');
+        });
     }
     
     // Step navigation
@@ -114,10 +126,17 @@ jQuery(document).ready(function($) {
     }
     
     function getEditorContent() {
-        if (typeof tinymce !== 'undefined' && tinymce.get('post_content')) {
-            return tinymce.get('post_content').getContent();
+        let content = '';
+        
+        // Try TinyMCE first
+        if (typeof tinymce !== 'undefined' && tinymce.get('post_content') && !tinymce.get('post_content').isHidden()) {
+            content = tinymce.get('post_content').getContent();
+        } else {
+            // Fallback to textarea
+            content = $('#post_content').val();
         }
-        return $('#post_content').val();
+        
+        return content;
     }
     
     // Autocomplete setup
@@ -1044,11 +1063,16 @@ jQuery(document).ready(function($) {
     
     // Helper function to set editor content
     function setEditorContent(content) {
-        if (typeof tinymce !== 'undefined' && tinymce.get('post_content')) {
+        // Set content in TinyMCE if available
+        if (typeof tinymce !== 'undefined' && tinymce.get('post_content') && !tinymce.get('post_content').isHidden()) {
             tinymce.get('post_content').setContent(content);
-        } else {
-            $('#post_content').val(content);
-        }
+        } 
+        
+        // Always set textarea value as fallback
+        $('#post_content').val(content);
+        
+        // Remove aria-hidden for accessibility
+        $('#post_content').removeAttr('aria-hidden');
     }
     
     // Helper function to check if item is already selected

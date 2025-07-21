@@ -43,7 +43,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 								'textarea_rows' => 15,
 								'teeny' => false,
 								'editor_height' => 400,
-								'quicktags' => array( 'buttons' => 'em,strong,link,block,del,ins,img,ul,ol,li,code,more,close' )
+								'wpautop' => true,
+								'tinymce' => array(
+									'toolbar1' => 'bold,italic,underline,link,unlink,bullist,numlist,blockquote,alignleft,aligncenter,alignright,undo,redo',
+									'toolbar2' => 'formatselect,forecolor,backcolor,removeformat,charmap,outdent,indent,hr,wp_more',
+									'content_css' => false,
+									'statusbar' => false,
+									'resize' => true,
+									'menubar' => false,
+									'branding' => false
+								),
+								'quicktags' => array( 
+									'buttons' => 'em,strong,link,block,del,ins,img,ul,ol,li,code,more,close'
+								)
 							));
 							?>
 							
