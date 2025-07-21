@@ -14,14 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="wpfrontblogger-progress-bar">
 		<div class="progress-step active" data-step="1">
 			<span class="step-number">1</span>
-			<span class="step-title"><?php _e( 'Basic Info', 'wpfrontblogger' ); ?></span>
+			<span class="step-title"><?php _e( 'Content & Info', 'wpfrontblogger' ); ?></span>
 		</div>
 		<div class="progress-step" data-step="2">
 			<span class="step-number">2</span>
-			<span class="step-title"><?php _e( 'Content', 'wpfrontblogger' ); ?></span>
-		</div>
-		<div class="progress-step" data-step="3">
-			<span class="step-number">3</span>
 			<span class="step-title"><?php _e( 'Media & Products', 'wpfrontblogger' ); ?></span>
 		</div>
 	</div>
@@ -29,12 +25,42 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<form id="wpfrontblogger-admin-form" enctype="multipart/form-data">
 		<?php wp_nonce_field( 'wpfrontblogger_nonce', 'wpfrontblogger_nonce' ); ?>
 		
-		<!-- Step 1: Basic Information -->
+		<!-- Step 1: Content & Basic Information -->
 		<div class="form-step active" id="step-1">
-			<h2><?php _e( 'Step 1: Basic Information', 'wpfrontblogger' ); ?></h2>
+			<h2><?php _e( 'Step 1: Content & Basic Information', 'wpfrontblogger' ); ?></h2>
 			
 			<table class="form-table" role="presentation">
 				<tbody>
+					<tr>
+						<th scope="row">
+							<label for="post_content"><?php _e( 'Blog Content', 'wpfrontblogger' ); ?> <span class="description required">(required)</span></label>
+						</th>
+						<td>
+							<?php
+							wp_editor( '', 'post_content', array(
+								'textarea_name' => 'post_content',
+								'media_buttons' => true,
+								'textarea_rows' => 15,
+								'teeny' => false,
+								'editor_height' => 400,
+								'quicktags' => array( 'buttons' => 'em,strong,link,block,del,ins,img,ul,ol,li,code,more,close' )
+							));
+							?>
+							
+							<div class="content-ai-actions">
+								<button type="button" class="button ai-button" id="ai-rewrite-content" title="<?php _e( 'Rewrite content using AI to improve quality and style', 'wpfrontblogger' ); ?>">
+									<span class="ai-icon">🤖</span> <?php _e( 'AI Rewrite Content', 'wpfrontblogger' ); ?>
+								</button>
+								<div class="ai-loading" id="ai-content-loading" style="display: none;">
+									<span class="spinner is-active"></span>
+									<span><?php _e( 'AI is rewriting your content...', 'wpfrontblogger' ); ?></span>
+								</div>
+							</div>
+							
+							<div class="field-error" id="post_content_error"></div>
+							<p class="description"><?php _e( 'Write your blog content first, then use AI to generate titles, categories, and tags based on your content', 'wpfrontblogger' ); ?></p>
+						</td>
+					</tr>
 					<tr>
 						<th scope="row">
 							<label for="post_title"><?php _e( 'Title', 'wpfrontblogger' ); ?> <span class="description required">(required)</span></label>
@@ -55,7 +81,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<div class="ai-suggestion-list"></div>
 							</div>
 							<div class="field-error" id="post_title_error"></div>
-							<p class="description"><?php _e( 'Write your content first, then use AI to generate relevant titles', 'wpfrontblogger' ); ?></p>
+							<p class="description"><?php _e( 'Write your content above first, then use AI to generate relevant titles', 'wpfrontblogger' ); ?></p>
 						</td>
 					</tr>
 					<tr>
@@ -108,54 +134,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</div>
 		</div>
 
-		<!-- Step 2: Content -->
+		<!-- Step 2: Media & Products -->
 		<div class="form-step" id="step-2">
-			<h2><?php _e( 'Step 2: Content', 'wpfrontblogger' ); ?></h2>
-			
-			<table class="form-table" role="presentation">
-				<tbody>
-					<tr>
-						<th scope="row">
-							<label for="post_content"><?php _e( 'Blog Content', 'wpfrontblogger' ); ?> <span class="description required">(required)</span></label>
-						</th>
-						<td>
-							<?php
-							wp_editor( '', 'post_content', array(
-								'textarea_name' => 'post_content',
-								'media_buttons' => true,
-								'textarea_rows' => 15,
-								'teeny' => false,
-								'editor_height' => 400,
-								'quicktags' => array( 'buttons' => 'em,strong,link,block,del,ins,img,ul,ol,li,code,more,close' )
-							));
-							?>
-							
-							<div class="content-ai-actions">
-								<button type="button" class="button ai-button" id="ai-rewrite-content" title="<?php _e( 'Rewrite content using AI to improve quality and style', 'wpfrontblogger' ); ?>">
-									<span class="ai-icon">🤖</span> <?php _e( 'AI Rewrite Content', 'wpfrontblogger' ); ?>
-								</button>
-								<div class="ai-loading" id="ai-content-loading" style="display: none;">
-									<span class="spinner is-active"></span>
-									<span><?php _e( 'AI is rewriting your content...', 'wpfrontblogger' ); ?></span>
-								</div>
-							</div>
-							
-							<div class="field-error" id="post_content_error"></div>
-							<p class="description"><?php _e( 'Write or paste your blog content, then use AI to enhance it', 'wpfrontblogger' ); ?></p>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-
-			<div class="form-actions">
-				<button type="button" class="button btn-prev" data-prev="1"><?php _e( 'Previous Step', 'wpfrontblogger' ); ?></button>
-				<button type="button" class="button button-primary btn-next" data-next="3"><?php _e( 'Next Step', 'wpfrontblogger' ); ?></button>
-			</div>
-		</div>
-
-		<!-- Step 3: Media & Products -->
-		<div class="form-step" id="step-3">
-			<h2><?php _e( 'Step 3: Media & Products', 'wpfrontblogger' ); ?></h2>
+			<h2><?php _e( 'Step 2: Media & Products', 'wpfrontblogger' ); ?></h2>
 			
 			<table class="form-table" role="presentation">
 				<tbody>
@@ -282,7 +263,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</table>
 
 			<div class="form-actions">
-				<button type="button" class="button btn-prev" data-prev="2"><?php _e( 'Previous Step', 'wpfrontblogger' ); ?></button>
+				<button type="button" class="button btn-prev" data-prev="1"><?php _e( 'Previous Step', 'wpfrontblogger' ); ?></button>
 				<button type="submit" class="button button-primary btn-submit" id="submit-btn"><?php _e( 'Create Blog Post', 'wpfrontblogger' ); ?></button>
 			</div>
 		</div>
