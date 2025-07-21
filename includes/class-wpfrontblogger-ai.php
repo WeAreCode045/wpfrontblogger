@@ -304,10 +304,3 @@ if ( ! class_exists( 'WPFRONTBLOGGER_AI' ) ) {
 
 // Initialize AI class
 $GLOBALS['wpfrontblogger_ai'] = new WPFRONTBLOGGER_AI();
-
-/**
- * Get AI instance
- */
-function wpfrontblogger_ai() {
-	return $GLOBALS['wpfrontblogger_ai'];
-}
