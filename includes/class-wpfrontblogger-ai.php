@@ -54,11 +54,16 @@ if ( ! class_exists( 'WPFRONTBLOGGER_AI' ) ) {
 		 * Make OpenAI API request
 		 */
 		private function make_api_request( $prompt, $max_tokens = 500 ) {
+			error_log( 'WPFrontBlogger AI: make_api_request() called with max_tokens: ' . $max_tokens );
+			
 			$api_token = $this->get_api_token();
 			
 			if ( empty( $api_token ) ) {
+				error_log( 'WPFrontBlogger AI: No API token configured' );
 				return new WP_Error( 'no_token', __( 'OpenAI API token not configured', 'wpfrontblogger' ) );
 			}
+
+			error_log( 'WPFrontBlogger AI: API token available, length: ' . strlen( $api_token ) );
 
 			$body = array(
 				'model' => 'gpt-3.5-turbo',
@@ -72,6 +77,8 @@ if ( ! class_exists( 'WPFRONTBLOGGER_AI' ) ) {
 				'temperature' => 0.7
 			);
 
+			error_log( 'WPFrontBlogger AI: Request body prepared' );
+
 			$args = array(
 				'timeout' => 30,
 				'headers' => array(
@@ -81,14 +88,19 @@ if ( ! class_exists( 'WPFRONTBLOGGER_AI' ) ) {
 				'body' => wp_json_encode( $body ),
 			);
 
+			error_log( 'WPFrontBlogger AI: Making HTTP request to: ' . $this->api_url );
 			$response = wp_remote_post( $this->api_url, $args );
 
 			if ( is_wp_error( $response ) ) {
+				error_log( 'WPFrontBlogger AI: HTTP request failed: ' . $response->get_error_message() );
 				return $response;
 			}
 
 			$response_code = wp_remote_retrieve_response_code( $response );
 			$response_body = wp_remote_retrieve_body( $response );
+
+			error_log( 'WPFrontBlogger AI: HTTP response code: ' . $response_code );
+			error_log( 'WPFrontBlogger AI: HTTP response body (first 500 chars): ' . substr( $response_body, 0, 500 ) );
 
 			if ( $response_code !== 200 ) {
 				$error_data = json_decode( $response_body, true );
@@ -96,26 +108,46 @@ if ( ! class_exists( 'WPFRONTBLOGGER_AI' ) ) {
 					$error_data['error']['message'] : 
 					__( 'OpenAI API request failed', 'wpfrontblogger' );
 				
+				error_log( 'WPFrontBlogger AI: API error message: ' . $error_message );
 				return new WP_Error( 'api_error', $error_message );
 			}
 
 			$data = json_decode( $response_body, true );
 			
 			if ( ! isset( $data['choices'][0]['message']['content'] ) ) {
+				error_log( 'WPFrontBlogger AI: Invalid response structure' );
 				return new WP_Error( 'invalid_response', __( 'Invalid response from OpenAI API', 'wpfrontblogger' ) );
 			}
 
-			return trim( $data['choices'][0]['message']['content'] );
+			$result = trim( $data['choices'][0]['message']['content'] );
+			error_log( 'WPFrontBlogger AI: Successfully extracted content, length: ' . strlen( $result ) );
+
+			return $result;
 		}
 
 		/**
 		 * Rewrite content using AI
 		 */
 		public function rewrite_content( $content ) {
-			$prompts = $this->get_prompts();
-			$prompt = str_replace( '{content}', $content, $prompts['rewrite'] );
+			error_log( 'WPFrontBlogger AI: rewrite_content() method called' );
+			error_log( 'WPFrontBlogger AI: Content length: ' . strlen( $content ) );
 			
-			return $this->make_api_request( $prompt, 1000 );
+			$prompts = $this->get_prompts();
+			error_log( 'WPFrontBlogger AI: Prompts retrieved: ' . print_r( $prompts, true ) );
+			
+			$prompt = str_replace( '{content}', $content, $prompts['rewrite'] );
+			error_log( 'WPFrontBlogger AI: Final prompt: ' . substr( $prompt, 0, 200 ) . '...' );
+			
+			error_log( 'WPFrontBlogger AI: Calling make_api_request()' );
+			$result = $this->make_api_request( $prompt, 1000 );
+			
+			if ( is_wp_error( $result ) ) {
+				error_log( 'WPFrontBlogger AI: API request failed: ' . $result->get_error_message() );
+			} else {
+				error_log( 'WPFrontBlogger AI: API request successful, response length: ' . strlen( $result ) );
+			}
+			
+			return $result;
 		}
 
 		/**

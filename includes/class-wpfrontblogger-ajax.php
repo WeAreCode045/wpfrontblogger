@@ -57,25 +57,40 @@ if ( ! class_exists( 'WPFRONTBLOGGER_AJAX' ) ) {
 		 * AI: Rewrite content
 		 */
 		public function ai_rewrite_content() {
+			// Debug: Log the start of the function
+			error_log('WP Front Blogger: AI rewrite content called');
+			
 			if ( ! wp_verify_nonce( $_POST['nonce'], 'wpfrontblogger_nonce' ) ) {
+				error_log('WP Front Blogger: Nonce verification failed');
 				wp_die( 'Security check failed' );
 			}
-
+			
+			error_log('WP Front Blogger: Checking if AI is available');
 			if ( ! wpfrontblogger_ai()->is_ai_available() ) {
+				error_log('WP Front Blogger: AI not available');
 				wp_send_json_error( array( 'message' => __( 'AI functionality is not available. Please configure OpenAI API token in settings.', 'wpfrontblogger' ) ) );
 			}
-
+			
+			error_log('WP Front Blogger: AI is available, processing content');
 			$content = wp_unslash( $_POST['content'] );
 			if ( empty( $content ) ) {
+				error_log('WP Front Blogger: No content provided');
 				wp_send_json_error( array( 'message' => __( 'Content is required for rewriting', 'wpfrontblogger' ) ) );
 			}
-
+			
+			error_log('WP Front Blogger: Content length: ' . strlen($content));
+			error_log('WP Front Blogger: Calling AI rewrite_content method');
+			
 			$result = wpfrontblogger_ai()->rewrite_content( $content );
-
+			
+			error_log('WP Front Blogger: AI rewrite result type: ' . gettype($result));
+			
 			if ( is_wp_error( $result ) ) {
+				error_log('WP Front Blogger: AI rewrite error: ' . $result->get_error_message());
 				wp_send_json_error( array( 'message' => $result->get_error_message() ) );
 			}
-
+			
+			error_log('WP Front Blogger: AI rewrite successful, result length: ' . strlen($result));
 			wp_send_json_success( array( 'content' => $result ) );
 		}
 
