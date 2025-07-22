@@ -211,7 +211,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	   <!-- Step 4: Featured Image -->
 	   <div class="form-step" id="step-4">
 		   <h2><?php _e( 'Step 4: Featured Image', 'wpfrontblogger' ); ?></h2>
-		   <p class="step-description"><?php _e( 'Choose a featured image by uploading, using Envato Elements, or let AI find one for you.', 'wpfrontblogger' ); ?></p>
+		   <p class="step-description"><?php _e( 'Choose a featured image by uploading your own or searching the Envato Elements library (if installed).', 'wpfrontblogger' ); ?></p>
 		   <table class="form-table" role="presentation">
 			   <tbody>
 				   <tr>
@@ -222,9 +222,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 						   <!-- Image source tabs -->
 						   <div class="image-source-tabs">
 							   <button type="button" class="button tab-button active" data-tab="upload"><?php _e( 'Upload Image', 'wpfrontblogger' ); ?></button>
-							   <button type="button" class="button tab-button ai-button" data-tab="ai-image" title="<?php _e( 'Let AI find a suitable image from Envato Elements', 'wpfrontblogger' ); ?>">
-								   <span class="ai-icon">🤖</span> <?php _e( 'AI Find Image', 'wpfrontblogger' ); ?>
-							   </button>
 							   <?php if ( class_exists( 'Envato_Elements' ) || function_exists( 'envato_elements_get_images' ) ) : ?>
 								   <button type="button" class="button tab-button" data-tab="envato"><?php _e( 'Envato Elements', 'wpfrontblogger' ); ?></button>
 							   <?php endif; ?>
@@ -241,37 +238,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 								   <div class="upload-placeholder" id="upload-placeholder">
 									   <div class="upload-icon">📷</div>
 									   <p><?php _e( 'Click to upload or drag and drop an image', 'wpfrontblogger' ); ?></p>
-								   </div>
-							   </div>
-						   </div>
-
-						   <!-- AI Image tab -->
-						   <div class="image-tab-content" id="ai-image-tab">
-							   <div class="ai-image-container">
-								   <div class="ai-image-description">
-									   <h4><?php _e( 'AI Image Generation', 'wpfrontblogger' ); ?></h4>
-									   <p><?php _e( 'AI will analyze your title and content to find the perfect image from Envato Elements', 'wpfrontblogger' ); ?></p>
-								   </div>
-								   <button type="button" class="button button-primary" id="ai-find-image">
-									   <span class="ai-icon">🤖</span> <?php _e( 'Find Perfect Image with AI', 'wpfrontblogger' ); ?>
-								   </button>
-								   <div class="ai-loading" id="ai-image-loading" style="display: none;">
-									   <span class="spinner is-active"></span>
-									   <span><?php _e( 'AI is analyzing your content and searching for the perfect image...', 'wpfrontblogger' ); ?></span>
-								   </div>
-								   <div class="ai-image-results" id="ai-image-results" style="display: none;">
-									   <h4><?php _e( 'AI Found This Image:', 'wpfrontblogger' ); ?></h4>
-									   <div class="ai-image-suggestion">
-										   <!-- AI result will be populated here -->
-									   </div>
-									   <div class="ai-image-keywords">
-										   <strong><?php _e( 'Search terms used:', 'wpfrontblogger' ); ?></strong>
-										   <span id="ai-keywords-used"></span>
-									   </div>
-								   </div>
-								   <div class="ai-image-actions" style="display: none;">
-									   <button type="button" class="button button-primary" id="use-ai-image"><?php _e( 'Use This Image', 'wpfrontblogger' ); ?></button>
-									   <button type="button" class="button" id="try-ai-again"><?php _e( 'Try Again', 'wpfrontblogger' ); ?></button>
 								   </div>
 							   </div>
 						   </div>
