@@ -12,7 +12,7 @@
  * Text Domain: wpfrontblogger
  * Domain Path: /languages/
  *
- * @package StandaloneTech
+ * @package WPFRONTBLOGGER
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
