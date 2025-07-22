@@ -14,20 +14,37 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="wpfrontblogger-progress-bar">
 		<div class="progress-step active" data-step="1">
 			<span class="step-number">1</span>
-			<span class="step-title"><?php _e( 'Content & Info', 'wpfrontblogger' ); ?></span>
+			<span class="step-title"><?php _e( 'Write Content', 'wpfrontblogger' ); ?></span>
 		</div>
 		<div class="progress-step" data-step="2">
 			<span class="step-number">2</span>
-			<span class="step-title"><?php _e( 'Media & Products', 'wpfrontblogger' ); ?></span>
+			<span class="step-title"><?php _e( 'AI Rewrite', 'wpfrontblogger' ); ?></span>
+		</div>
+		<div class="progress-step" data-step="3">
+			<span class="step-number">3</span>
+			<span class="step-title"><?php _e( 'Title & Meta', 'wpfrontblogger' ); ?></span>
+		</div>
+		<div class="progress-step" data-step="4">
+			<span class="step-number">4</span>
+			<span class="step-title"><?php _e( 'Featured Image', 'wpfrontblogger' ); ?></span>
+		</div>
+		<div class="progress-step" data-step="5">
+			<span class="step-number">5</span>
+			<span class="step-title"><?php _e( 'Products', 'wpfrontblogger' ); ?></span>
+		</div>
+		<div class="progress-step" data-step="6">
+			<span class="step-number">6</span>
+			<span class="step-title"><?php _e( 'Review & Publish', 'wpfrontblogger' ); ?></span>
 		</div>
 	</div>
 
 	<form id="wpfrontblogger-admin-form" enctype="multipart/form-data">
 		<?php wp_nonce_field( 'wpfrontblogger_nonce', 'wpfrontblogger_nonce' ); ?>
 		
-		<!-- Step 1: Content & Basic Information -->
+		<!-- Step 1: Write Content -->
 		<div class="form-step active" id="step-1">
-			<h2><?php _e( 'Step 1: Content & Basic Information', 'wpfrontblogger' ); ?></h2>
+			<h2><?php _e( 'Step 1: Write Your Blog Content', 'wpfrontblogger' ); ?></h2>
+			<p class="step-description"><?php _e( 'Start by writing your blog content. This will be saved and used in the following steps for AI assistance.', 'wpfrontblogger' ); ?></p>
 			
 			<table class="form-table" role="presentation">
 				<tbody>
@@ -59,23 +76,148 @@ if ( ! defined( 'ABSPATH' ) ) {
 							));
 							?>
 							
+							<div class="field-error" id="post_content_error"></div>
+							<p class="description"><?php _e( 'Write your complete blog content. This will be automatically saved when you proceed to the next step.', 'wpfrontblogger' ); ?></p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="form-actions">
+				<button type="button" class="button button-primary btn-next" data-next="2"><?php _e( 'Save & Continue', 'wpfrontblogger' ); ?></button>
+			</div>
+		</div>
+
+		<!-- Step 2: AI Rewrite (Optional) -->
+		<div class="form-step" id="step-2">
+			<h2><?php _e( 'Step 2: AI Content Enhancement', 'wpfrontblogger' ); ?></h2>
+			<p class="step-description"><?php _e( 'Let AI improve your content, or skip this step to keep your original text.', 'wpfrontblogger' ); ?></p>
+			
+			<table class="form-table" role="presentation">
+				<tbody>
+					<tr>
+						<th scope="row">
+							<label><?php _e( 'Content Preview', 'wpfrontblogger' ); ?></label>
+						</th>
+						<td>
+							<div class="content-preview" id="content-preview">
+								<!-- Content will be loaded here from session storage -->
+							</div>
+							
 							<div class="content-ai-actions">
-								<button type="button" class="button ai-button" id="ai-rewrite-content" title="<?php _e( 'Rewrite content using AI to improve quality and style', 'wpfrontblogger' ); ?>">
-									<span class="ai-icon">🤖</span> <?php _e( 'AI Rewrite Content', 'wpfrontblogger' ); ?>
+								<button type="button" class="button button-primary ai-button" id="ai-rewrite-content">
+									<span class="ai-icon">🤖</span> <?php _e( 'Enhance with AI', 'wpfrontblogger' ); ?>
 								</button>
+								<button type="button" class="button" id="skip-rewrite"><?php _e( 'Keep Original', 'wpfrontblogger' ); ?></button>
 								<div class="ai-loading" id="ai-content-loading" style="display: none;">
 									<span class="spinner is-active"></span>
-									<span><?php _e( 'AI is rewriting your content...', 'wpfrontblogger' ); ?></span>
+									<span><?php _e( 'AI is enhancing your content...', 'wpfrontblogger' ); ?></span>
 								</div>
 							</div>
 							
-							<div class="field-error" id="post_content_error"></div>
-							<p class="description"><?php _e( 'Write your blog content first, then use AI to generate titles, categories, and tags based on your content', 'wpfrontblogger' ); ?></p>
+							<p class="description"><?php _e( 'AI will improve readability, style, and structure while keeping your core message.', 'wpfrontblogger' ); ?></p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="form-actions">
+				<button type="button" class="button btn-prev" data-prev="1"><?php _e( 'Previous', 'wpfrontblogger' ); ?></button>
+				<button type="button" class="button button-primary btn-next" data-next="3"><?php _e( 'Continue', 'wpfrontblogger' ); ?></button>
+			</div>
+		</div>
+
+		<!-- Step 3: Title & Meta Information -->
+		<div class="form-step" id="step-3">
+			<h2><?php _e( 'Step 3: Title, Categories & Tags', 'wpfrontblogger' ); ?></h2>
+			<p class="step-description"><?php _e( 'Set your title, select categories and tags. AI can help based on your content.', 'wpfrontblogger' ); ?></p>
+			
+			<table class="form-table" role="presentation">
+				<tbody>
+					<tr>
+						<th scope="row">
+							<label for="post_title"><?php _e( 'Title', 'wpfrontblogger' ); ?> <span class="description required">(required)</span></label>
+						</th>
+						<td>
+							<div class="input-with-ai">
+								<input type="text" id="post_title" name="post_title" class="regular-text" required maxlength="255" placeholder="<?php _e( 'Enter your blog post title', 'wpfrontblogger' ); ?>">
+								<button type="button" class="button ai-button" id="ai-generate-title" title="<?php _e( 'Generate title using AI based on content', 'wpfrontblogger' ); ?>">
+									<span class="ai-icon">🤖</span> <?php _e( 'AI Generate', 'wpfrontblogger' ); ?>
+								</button>
+							</div>
+							<div class="ai-loading" id="ai-title-loading" style="display: none;">
+								<span class="spinner is-active"></span>
+								<span><?php _e( 'AI is generating titles...', 'wpfrontblogger' ); ?></span>
+							</div>
+							<div class="ai-suggestions" id="ai-title-suggestions" style="display: none;">
+								<h4><?php _e( 'AI Generated Titles:', 'wpfrontblogger' ); ?></h4>
+								<div class="ai-suggestion-list"></div>
+							</div>
+							<div class="field-error" id="post_title_error"></div>
+							<p class="description"><?php _e( 'Enter a compelling title or let AI generate suggestions based on your content', 'wpfrontblogger' ); ?></p>
 						</td>
 					</tr>
 					<tr>
 						<th scope="row">
-							<label for="post_title"><?php _e( 'Title', 'wpfrontblogger' ); ?> <span class="description required">(required)</span></label>
+							<label for="categories"><?php _e( 'Categories', 'wpfrontblogger' ); ?></label>
+						</th>
+						<td>
+							<div class="category-container">
+								<div class="input-with-ai">
+									<input type="text" id="categories" name="categories" class="regular-text" placeholder="<?php _e( 'Search or create categories', 'wpfrontblogger' ); ?>">
+									<button type="button" class="button ai-button" id="ai-select-categories" title="<?php _e( 'Let AI select relevant categories based on content', 'wpfrontblogger' ); ?>">
+										<span class="ai-icon">🤖</span> <?php _e( 'AI Select', 'wpfrontblogger' ); ?>
+									</button>
+								</div>
+								<div class="selected-items" id="selected-categories"></div>
+								<div class="ai-loading" id="ai-categories-loading" style="display: none;">
+									<span class="spinner is-active"></span>
+									<span><?php _e( 'AI is selecting categories...', 'wpfrontblogger' ); ?></span>
+								</div>
+							</div>
+							<p class="description"><?php _e( 'Type to search existing categories, create new ones by pressing Enter, or let AI select based on your content', 'wpfrontblogger' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="tags"><?php _e( 'Tags', 'wpfrontblogger' ); ?></label>
+						</th>
+						<td>
+							<div class="tag-container">
+								<div class="input-with-ai">
+									<input type="text" id="tags" name="tags" class="regular-text" placeholder="<?php _e( 'Search or add tags', 'wpfrontblogger' ); ?>">
+									<button type="button" class="button ai-button" id="ai-generate-tags" title="<?php _e( 'Generate relevant tags using AI based on content', 'wpfrontblogger' ); ?>">
+										<span class="ai-icon">🤖</span> <?php _e( 'AI Generate', 'wpfrontblogger' ); ?>
+									</button>
+								</div>
+								<div class="selected-items" id="selected-tags"></div>
+								<div class="ai-loading" id="ai-tags-loading" style="display: none;">
+									<span class="spinner is-active"></span>
+									<span><?php _e( 'AI is generating tags...', 'wpfrontblogger' ); ?></span>
+								</div>
+							</div>
+							<p class="description"><?php _e( 'Type to search existing tags, add new ones by pressing Enter, or let AI generate relevant tags', 'wpfrontblogger' ); ?></p>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="form-actions">
+				<button type="button" class="button btn-prev" data-prev="2"><?php _e( 'Previous', 'wpfrontblogger' ); ?></button>
+				<button type="button" class="button button-primary btn-next" data-next="4"><?php _e( 'Continue', 'wpfrontblogger' ); ?></button>
+			</div>
+		</div>
+
+		<!-- Step 4: Featured Image -->
+		<div class="form-step" id="step-4">
+			<h2><?php _e( 'Step 4: Featured Image', 'wpfrontblogger' ); ?></h2>
+			<p class="step-description"><?php _e( 'Choose a featured image by uploading, using Envato Elements, or let AI find one for you.', 'wpfrontblogger' ); ?></p>
+			
+			<table class="form-table" role="presentation">
+				<tbody>
+					<tr>
+						<th scope="row">
+							<label for="featured_image"><?php _e( 'Featured Image', 'wpfrontblogger' ); ?></label>
 						</th>
 						<td>
 							<div class="input-with-ai">

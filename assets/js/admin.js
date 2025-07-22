@@ -6,13 +6,23 @@ jQuery(document).ready(function($) {
     'use strict';
     
     let currentStep = 1;
-    let totalSteps = 3;
+    let totalSteps = 6;
     let selectedCategories = [];
     let selectedTags = [];
     let selectedProducts = [];
     let envatoCurrentPage = 1;
     let envatoTotalPages = 1;
     let envatoCurrentQuery = '';
+    
+    // Session storage keys
+    const STORAGE_KEYS = {
+        CONTENT: 'wpfb_content',
+        TITLE: 'wpfb_title',
+        CATEGORIES: 'wpfb_categories',
+        TAGS: 'wpfb_tags',
+        PRODUCTS: 'wpfb_products',
+        IMAGE_ID: 'wpfb_image_id'
+    };
     
     // Initialize the form
     init();
@@ -53,14 +63,85 @@ jQuery(document).ready(function($) {
         $('.btn-next').on('click', function() {
             const nextStep = parseInt($(this).data('next'));
             if (validateStep(currentStep)) {
+                saveCurrentStepData();
                 goToStep(nextStep);
             }
         });
         
         $('.btn-prev').on('click', function() {
             const prevStep = parseInt($(this).data('prev'));
+            saveCurrentStepData();
             goToStep(prevStep);
         });
+    }
+    
+    // Save data for current step to session storage
+    function saveCurrentStepData() {
+        switch(currentStep) {
+            case 1:
+                // Save content
+                const content = getEditorContent();
+                if (content) {
+                    sessionStorage.setItem(STORAGE_KEYS.CONTENT, content);
+                }
+                break;
+            case 2:
+                // Content already saved in step 1, possibly enhanced by AI
+                break;
+            case 3:
+                // Save title, categories, tags
+                sessionStorage.setItem(STORAGE_KEYS.TITLE, $('#post_title').val());
+                sessionStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(selectedCategories));
+                sessionStorage.setItem(STORAGE_KEYS.TAGS, JSON.stringify(selectedTags));
+                break;
+            case 4:
+                // Save image ID
+                sessionStorage.setItem(STORAGE_KEYS.IMAGE_ID, $('#featured_image_id').val());
+                break;
+            case 5:
+                // Save products
+                sessionStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(selectedProducts));
+                break;
+        }
+    }
+    
+    // Load data for current step from session storage
+    function loadCurrentStepData() {
+        switch(currentStep) {
+            case 2:
+                // Load and display content preview
+                const content = sessionStorage.getItem(STORAGE_KEYS.CONTENT);
+                if (content) {
+                    $('#content-preview').html('<div class="content-text">' + content + '</div>');
+                }
+                break;
+            case 3:
+                // Load saved data
+                const savedTitle = sessionStorage.getItem(STORAGE_KEYS.TITLE);
+                if (savedTitle) {
+                    $('#post_title').val(savedTitle);
+                }
+                
+                const savedCategories = sessionStorage.getItem(STORAGE_KEYS.CATEGORIES);
+                if (savedCategories) {
+                    selectedCategories = JSON.parse(savedCategories);
+                    displaySelectedItems('categories');
+                }
+                
+                const savedTags = sessionStorage.getItem(STORAGE_KEYS.TAGS);
+                if (savedTags) {
+                    selectedTags = JSON.parse(savedTags);
+                    displaySelectedItems('tags');
+                }
+                break;
+            case 5:
+                const savedProducts = sessionStorage.getItem(STORAGE_KEYS.PRODUCTS);
+                if (savedProducts) {
+                    selectedProducts = JSON.parse(savedProducts);
+                    displaySelectedItems('products');
+                }
+                break;
+        }
     }
     
     function goToStep(step) {
@@ -86,6 +167,9 @@ jQuery(document).ready(function($) {
         
         currentStep = step;
         
+        // Load data for the new step
+        loadCurrentStepData();
+        
         // Focus on first input of new step
         setTimeout(function() {
             $('#step-' + step + ' input[type="text"]:first').focus();
@@ -101,6 +185,18 @@ jQuery(document).ready(function($) {
         
         switch(step) {
             case 1:
+                const content = getEditorContent();
+                if (!content || content.trim() === '') {
+                    showFieldError('post_content', 'Blog content is required');
+                    isValid = false;
+                }
+                break;
+                
+            case 2:
+                // Optional step - always valid
+                break;
+                
+            case 3:
                 const title = $('#post_title').val().trim();
                 if (!title) {
                     showFieldError('post_title', 'Title is required');
@@ -108,10 +204,18 @@ jQuery(document).ready(function($) {
                 }
                 break;
                 
-            case 2:
-                const content = getEditorContent();
-                if (!content || content.trim() === '') {
-                    showFieldError('post_content', 'Content is required');
+            case 4:
+            case 5:
+                // Optional steps - always valid
+                break;
+                
+            case 6:
+                // Final validation
+                const savedContent = sessionStorage.getItem(STORAGE_KEYS.CONTENT);
+                const savedTitle = sessionStorage.getItem(STORAGE_KEYS.TITLE);
+                
+                if (!savedContent || !savedTitle) {
+                    showNotice('Please complete all required fields before publishing.', 'error');
                     isValid = false;
                 }
                 break;
@@ -319,6 +423,37 @@ jQuery(document).ready(function($) {
         // Update product fields
         const productIds = selectedProducts.map(product => product.id);
         $('#selected_product_ids').val(productIds.join(','));
+    }
+    
+    // Display selected items from session storage
+    function displaySelectedItems(type) {
+        const containerId = 'selected-' + type;
+        let selectedArray;
+        
+        switch(type) {
+            case 'categories':
+                selectedArray = selectedCategories;
+                break;
+            case 'tags':
+                selectedArray = selectedTags;
+                break;
+            case 'products':
+                selectedArray = selectedProducts;
+                break;
+        }
+        
+        $('#' + containerId).empty();
+        
+        selectedArray.forEach(function(item) {
+            const selectedItem = $('<div class="selected-item">' +
+                '<span class="item-label">' + item.label + '</span>' +
+                '<button type="button" class="remove-item" data-type="' + type + '" data-id="' + item.id + '">&times;</button>' +
+            '</div>');
+            
+            $('#' + containerId).append(selectedItem);
+        });
+        
+        updateHiddenFields();
     }
     
     // Image upload setup
@@ -706,6 +841,12 @@ jQuery(document).ready(function($) {
         // AI Rewrite Content
         $('#ai-rewrite-content').on('click', handleAIRewriteContent);
         
+        // Skip AI rewrite
+        $('#skip-rewrite').on('click', function() {
+            // Keep original content, just continue
+            showNotice('Keeping your original content', 'info');
+        });
+        
         // AI Select Categories
         $('#ai-select-categories').on('click', handleAISelectCategories);
         
@@ -743,10 +884,10 @@ jQuery(document).ready(function($) {
     
     // AI Generate Title
     function handleAIGenerateTitle() {
-        const content = getEditorContent();
+        const content = sessionStorage.getItem(STORAGE_KEYS.CONTENT);
         
         if (!content || content.trim() === '') {
-            showNotice('Please write your blog content first, then AI can generate relevant titles', 'error');
+            showNotice('No content found. Please complete the previous steps first.', 'error');
             return;
         }
         
@@ -798,10 +939,10 @@ jQuery(document).ready(function($) {
     
     // AI Rewrite Content
     function handleAIRewriteContent() {
-        const content = getEditorContent();
+        const content = sessionStorage.getItem(STORAGE_KEYS.CONTENT);
         
         if (!content || content.trim() === '') {
-            showNotice('Please write your blog content first, then AI can rewrite it', 'error');
+            showNotice('No content found to rewrite. Please go back to step 1 and add content.', 'error');
             return;
         }
         
@@ -818,8 +959,13 @@ jQuery(document).ready(function($) {
             },
             success: function(response) {
                 if (response.success) {
-                    setEditorContent(response.data.content);
-                    // Success notice removed - content is rewritten silently
+                    // Update session storage with enhanced content
+                    sessionStorage.setItem(STORAGE_KEYS.CONTENT, response.data.content);
+                    
+                    // Update preview
+                    $('#content-preview').html('<div class="content-text enhanced">' + response.data.content + '</div>');
+                    
+                    showNotice('Content enhanced successfully!', 'success');
                 } else {
                     const errorMessage = (response.data && response.data.message) ? response.data.message : 'Failed to rewrite content';
                     showNotice(errorMessage, 'error');
