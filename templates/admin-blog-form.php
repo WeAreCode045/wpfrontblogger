@@ -277,9 +277,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	   </div>
 
 		<!-- Step 2: Media & Products -->
-		<div class="form-step" id="step-2">
-			<h2><?php _e( 'Step 2: Media & Products', 'wpfrontblogger' ); ?></h2>
-			
+		<div class="form-step" id="step-5">
+			<h2><?php _e( 'Step 5: Media & Products', 'wpfrontblogger' ); ?></h2>
+
 			<table class="form-table" role="presentation">
 				<tbody>
 					<tr>
