@@ -404,10 +404,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</tbody>
 			</table>
 
-			<div class="form-actions">
-				<button type="button" class="button btn-prev" data-prev="1"><?php _e( 'Previous Step', 'wpfrontblogger' ); ?></button>
-				<button type="submit" class="button button-primary btn-submit" id="submit-btn"><?php _e( 'Create Blog Post', 'wpfrontblogger' ); ?></button>
-			</div>
+					<div class="form-actions">
+						<button type="button" class="button btn-prev" data-prev="1"><?php _e( 'Previous Step', 'wpfrontblogger' ); ?></button>
+						<button type="button" class="button btn-skip" data-next="6"><?php _e( 'Skip', 'wpfrontblogger' ); ?></button>
+						<button type="submit" class="button button-primary btn-submit" id="submit-btn"><?php _e( 'Create Blog Post', 'wpfrontblogger' ); ?></button>
+					</div>
 		</div>
 	</form>
 

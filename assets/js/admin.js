@@ -328,6 +328,7 @@ jQuery(document).ready(function($) {
                     data: {
                         action: 'wpfrontblogger_search_products',
                         term: request.term,
+                        post_type: 'products',
                         nonce: wpfrontblogger_ajax.nonce
                     },
                     success: function(data) {
@@ -339,7 +340,7 @@ jQuery(document).ready(function($) {
                     }
                 });
             },
-            minLength: 3,
+            minLength: 2,
             select: function(event, ui) {
                 addSelectedItem('products', ui.item.id, ui.item.label);
                 $(this).val('');
