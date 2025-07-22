@@ -5,7 +5,7 @@
  * Description:Post Blogs to your WordPress site with ease using the wpfrontblogger plugin.
  * Author: WeAreCode045
  * Author URI: https://code045.nl/
- * Version: 1.0.11
+ * Version: 1.0.12
  * Requires at least: 6.0
  * Tested up to: 6.7
  *
