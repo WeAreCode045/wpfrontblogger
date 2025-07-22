@@ -13,7 +13,25 @@ if ( ! class_exists( 'WPFRONTBLOGGER_AI' ) ) {
 	/**
 	 * Plugin AI Class.
 	 */
-	class WPFRONTBLOGGER_AI {
+class WPFRONTBLOGGER_AI {
+	/**
+	 * The single instance of the class.
+	 *
+	 * @var WPFRONTBLOGGER_AI
+	 */
+	protected static $instance = null;
+
+	/**
+	 * Main instance
+	 *
+	 * @return self
+	 */
+	public static function instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
 
 		/**
 		 * OpenAI API URL

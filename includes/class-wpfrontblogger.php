@@ -151,25 +151,3 @@ function wpfrontblogger_ai() {
 	return WPFRONTBLOGGER_AI::instance();
 }
 
-class WPFRONTBLOGGER_AI {
-    /**
-     * The single instance of the class.
-     *
-     * @var WPFRONTBLOGGER_AI
-     */
-    protected static $instance = null;
-
-    /**
-     * Main instance
-     *
-     * @return self
-     */
-    public static function instance() {
-        if ( is_null( self::$instance ) ) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-
-    // ... (rest of the WPFRONTBLOGGER_AI class code)
-}
